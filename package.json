@@ -1,0 +1,28 @@
+{
+  "name": "kobo-budget-tracker",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "test": "node --test tests/*.test.js",
+    "test:browser": "node tests/browser-workflows.mjs && node tests/browser-edge.mjs && node tests/browser-storage.mjs && node tests/browser-compat.mjs",
+    "test:browser:built": "node scripts/test-built.mjs",
+    "verify:access": "node scripts/verify-access.mjs"
+  },
+  "dependencies": {
+    "lucide-react": "^0.468.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "playwright": "^1.65.0",
+    "vite": "^8.3.8"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}

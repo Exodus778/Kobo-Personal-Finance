@@ -1,0 +1,92 @@
+KOBO — PERSONAL BUDGET TRACKER
+
+Overview
+--------
+Kobo is a local-first budget tracker for recording income and expenses in their
+original currencies. It brings transactions, monthly totals, category spending
+and an optional spending target into one view, without requiring a bank
+connection or account.
+
+It solves a familiar problem: money can move across currencies and across notes,
+receipts and bank apps, making it difficult to tell what came in, where it went
+and how spending compares with a plan. Kobo keeps each calendar month separate.
+A surplus, deficit or target does not carry into the next month, and monthly net
+is not a running bank balance.
+
+What you can do
+---------------
+- Record transactions in NGN, USD, EUR, GBP, JPY, CNY, CAD, AUD, CHF, INR or ZAR.
+- Choose each transaction's original amount, currency, category and date.
+- Choose a monthly budget currency and set an optional spending target in it.
+- Change View in to see totals, chart and transactions in another currency,
+  without changing the target's currency or percentage used.
+- See the original amount and each conversion's rate, date and provenance.
+- Use a manual rate or derive an effective rate from a bank-charged amount.
+- If the exact-date rate is unavailable, enter one or explicitly accept an
+  earlier published rate; affected totals remain labelled incomplete otherwise.
+- Receive in-app warnings at 75% and 100% of a monthly spending target.
+- Export a monthly CSV report, or download and restore a full JSON backup.
+- Use labelled sample data in an otherwise empty month.
+
+Using the tracker
+-----------------
+1. Pick a month. NGN is the default budget currency for a new month. Use Change
+   beside the budget currency to choose another currency for that month.
+2. Set an optional target. It is measured in the budget currency, uses expenses
+   only and does not change the month's net.
+3. Choose Add transaction, select Income or Expense, and enter the original
+   amount, currency, date and category. A description is optional.
+4. Choose View in to display the month's totals and chart in another currency.
+   The transaction date determines the historical rate, not today's rate.
+5. Use Edit rate or Resolve rate on an entry to enter an effective bank rate,
+   retry an exact-date reference rate or review an earlier published rate.
+6. Use Backup to download the complete budget. The CSV button downloads only
+   the selected month's transaction report and is not a restore file.
+
+Amounts must be positive. JPY uses whole yen; the other supported currencies
+accept up to two decimal places. Enter amounts without commas. A transaction or
+target is limited to 999,999,999 whole units plus any allowed fractional units.
+Saving a transaction in a different month switches the view to that month.
+
+Each destination currency uses its own direct rate from the original currency.
+A manual rate applies only to its transaction and currency pair. For example, a
+manual USD-to-NGN bank rate is used for an NGN budget, but a separate USD-to-EUR
+rate is used for an EUR view. The target and its progress always stay in the
+monthly budget currency. Reference rates can differ from a bank's actual charge.
+
+Data and privacy
+----------------
+The app stores transactions, targets, currencies and saved rate data in this
+browser's localStorage. They are not encrypted, synced or backed up automatically.
+Clearing site data, switching browsers or changing the site's origin can make
+records unavailable. Current Kobo tabs coordinate one editable tab per origin;
+other tabs are read-only until the writer closes. Editing requires HTTPS (or
+localhost) and Web Locks. Close older app tabs before upgrading, as they may
+not respect the lock. If a conflict occurs, download a backup before reloading.
+
+Historical rate lookups go online. Rate providers receive the requested date and
+currency pair or base, plus normal network information such as your IP address.
+The app does not send transaction amounts, descriptions or categories in those
+requests. Internet access is needed for automatic rates, but manual rates work
+offline. Rates can be unavailable even when connected.
+
+Backup files contain every month, transaction, target, currency and saved rate;
+they are not encrypted. Store them privately. Restoring a valid backup replaces
+the entire current budget after confirmation; it does not merge records. CSVs
+contain only the selected month's transactions and cannot be restored.
+
+If a storage warning appears, do not assume changes are saved. The app avoids
+silently overwriting unreadable data. Keep the tab open and download a backup of
+what is visible; unreadable records cannot be included in that backup.
+
+Getting started
+---------------
+Install a currently patched Node.js 24 LTS and npm, then run from the project directory:
+
+    npm ci
+    npm run dev
+
+Open the URL printed by Vite. Use npm test for domain and storage tests and
+npm run build to create the static production build. See read.md for browser
+tests, implementation details, rate sources and limitations. See DEPLOYMENT.md
+for private production setup and the required access-control checks.

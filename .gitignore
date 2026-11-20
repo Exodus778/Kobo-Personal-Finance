@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.cache/
+.vite/
+.wrangler/
+*.log
+.env*
+!.env.example
+kobo-backup-*.json
+kobo-transactions-*.csv
+kobo-raw-storage-recovery.json
+kobo-*.zip

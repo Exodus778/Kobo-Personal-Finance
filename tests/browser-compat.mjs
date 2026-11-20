@@ -1,0 +1,46 @@
+import { firefox, webkit } from 'playwright';
+import assert from 'node:assert/strict';
+
+const baseURL = process.env.KOBO_TEST_URL || 'http://127.0.0.1:5173/';
+for (const [name, type] of [['Firefox', firefox], ['WebKit', webkit]]) {
+  const browser = await type.launch({ headless: true });
+  const context = await browser.newContext({ viewport: { width: 375, height: 812 } });
+  const page = await context.newPage();
+  const errors = []; page.on('pageerror', (error) => errors.push(error.message));
+  await page.goto(baseURL);
+  await page.waitForFunction(() => { const button = document.querySelector('.header-add'); return Boolean(button && !button.disabled); });
+  assert.equal(await page.locator('html').getAttribute('data-theme'), 'dark');
+  await page.getByRole('switch', { name: 'Light mode' }).click();
+  assert.equal(await page.locator('html').getAttribute('data-theme'), 'light');
+  assert.equal(await page.locator('input[type=month]').evaluate((element) => getComputedStyle(element).colorScheme), 'light');
+  await page.locator('input[type=month]').fill('2025-03');
+  await page.getByRole('button', { name: 'Add transaction', exact: true }).first().click();
+  await page.locator('#transaction-amount').fill('1200');
+  await page.locator('#transaction-date').fill('2025-03-20');
+  await page.locator('#transaction-description').fill(`${name} entry`);
+  await page.getByRole('dialog').getByRole('button', { name: 'Add transaction', exact: true }).click();
+  assert.equal((await page.evaluate(() => JSON.parse(localStorage.getItem('kobo.budget.data.v2')))).transactions[0].description, `${name} entry`);
+  const dimensions = await page.evaluate(() => ({ width: document.documentElement.clientWidth, scroll: document.documentElement.scrollWidth }));
+  assert.equal(dimensions.width, dimensions.scroll, `${name}: no horizontal scroll`);
+  const second = await context.newPage(); await second.goto(baseURL);
+  await second.getByText('Read-only while another tab is editing.').waitFor();
+  assert.equal(await second.locator('html').getAttribute('data-theme'), 'light');
+  assert.equal(await second.locator('.header-add').isDisabled(), true);
+  await page.close();
+  await second.waitForFunction(() => { const button = document.querySelector('.header-add'); return Boolean(button && !button.disabled); });
+  await second.locator('input[type=month]').fill('2025-03');
+  await second.getByText(`${name} entry`, { exact: true }).waitFor();
+  await second.getByRole('button', { name: 'Set target' }).click();
+  await second.locator('#target-amount').fill('5000');
+  await second.getByRole('button', { name: 'Save target' }).click();
+  await second.reload();
+  assert.equal(await second.locator('html').getAttribute('data-theme'), 'light');
+  await second.locator('input[type=month]').fill('2025-03');
+  await second.getByText(`${name} entry`, { exact: true }).waitFor();
+  assert.equal((await second.evaluate(() => JSON.parse(localStorage.getItem('kobo.budget.data.v2')))).months['2025-03'].targetMinor, 500000);
+  await second.getByRole('switch', { name: 'Light mode' }).click();
+  assert.equal(await second.locator('html').getAttribute('data-theme'), 'dark');
+  assert.deepEqual(errors, [], `${name}: no uncaught errors`);
+  await context.close(); await browser.close();
+  console.log(`${name}: transaction, themes, mobile layout, persistence and tab handoff PASS`);
+}
