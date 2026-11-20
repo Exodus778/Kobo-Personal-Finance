@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Kobo — local-first multicurrency budget tracker
 
 Kobo records income and expenses in their original currencies, shows month-by-month totals and category breakdowns, and compares spending with an optional monthly target. NGN is the default. Each month is independent: no surplus, deficit or target carries forward.
@@ -65,3 +66,7 @@ cloudflared tunnel --url http://localhost:4173 --http-host-header localhost:4173
 ```
 
 Repeat `--allowed-mail` for additional authorized addresses. The hostname changes and access ends when the process stops. Do not send anyone a login code. A new hostname has separate local storage; export a JSON backup from the old origin before it disappears if you need to move its data.
+=======
+# Kobo-Personal-Finance
+Kobo is a local-first personal budget tracker. It records income and expenses in their original currencies, groups them by calendar month and compares spending with an optional monthly target. NGN is the default for new months and for records migrated from the original naira-only version.
+>>>>>>> a86f3b7183c59e2408a74d597b1dd57986347d98
